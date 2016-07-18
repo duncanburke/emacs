@@ -264,6 +264,24 @@ printchar_to_stream (unsigned int ch, FILE *stream)
     }
 }
 
+DEFUN ("stdout", Fstdout, Sstdout, 1, 1, 0,
+       doc: /* Output character CHARACTER to system standard output. */)
+     (Lisp_Object character)
+{
+  CHECK_NUMBER (character);
+  printchar_to_stream (XINT(character), stdout);
+  return character;
+}
+
+DEFUN ("stderr", Fstderr, Sstderr, 1, 1, 0,
+       doc: /* Output character CHARACTER to system standard error. */)
+     (Lisp_Object character)
+{
+  CHECK_NUMBER (character);
+  printchar_to_stream (XINT(character), stderr);
+  return character;
+}
+
 /* Print character CH using method FUN.  FUN nil means print to
    print_buffer.  FUN t means print to echo area or stdout if
    non-interactive.  If FUN is neither nil nor t, call FUN with CH as
@@ -2301,6 +2319,8 @@ priorities.  */);
   /* prin1_to_string_buffer initialized in init_buffer_once in buffer.c */
   staticpro (&Vprin1_to_string_buffer);
 
+  defsubr (&Sstdout);
+  defsubr (&Sstderr);
   defsubr (&Sprin1);
   defsubr (&Sprin1_to_string);
   defsubr (&Serror_message_string);

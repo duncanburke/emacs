@@ -142,7 +142,7 @@ A symbol as input stream is equivalent to the symbol's function
 definition (if any).
 @end table
 
-  Here is an example of reading from a stream that is a buffer, showing
+Here is an example of reading from a stream that is a buffer, showing
 where point is located before and after:
 
 @example
@@ -529,6 +529,25 @@ Now we can put the output in the proper order by reversing the list:
 @noindent
 Calling @code{concat} converts the list to a string so you can see its
 contents more clearly.
+
+Two functions which are specifically designed for use as output
+streams:
+
+@table @asis
+@cindex @code{stdout} output stream
+@item @var{stdout}
+Prints to the system standard output (as opposed to the
+@var{standard-output}), regardless of whether Emacs is running
+interactively or not.
+
+@item @var{stderr} output stream
+Prints to the system standard error, regardless of whether Emacs is
+running interactively or not.
+@end table
+
+These functions are predominately useful for debugging, as they are a
+mechanism for producing output that does not change any buffer.
+
 
 @node Output Functions
 @section Output Functions

@@ -264,24 +264,6 @@ printchar_to_stream (unsigned int ch, FILE *stream)
     }
 }
 
-DEFUN ("stdout", Fstdout, Sstdout, 1, 1, 0,
-       doc: /* Output character CHARACTER to system standard output. */)
-     (Lisp_Object character)
-{
-  CHECK_NUMBER (character);
-  printchar_to_stream (XINT(character), stdout);
-  return character;
-}
-
-DEFUN ("stderr", Fstderr, Sstderr, 1, 1, 0,
-       doc: /* Output character CHARACTER to system standard error. */)
-     (Lisp_Object character)
-{
-  CHECK_NUMBER (character);
-  printchar_to_stream (XINT(character), stderr);
-  return character;
-}
-
 /* Print character CH using method FUN.  FUN nil means print to
    print_buffer.  FUN t means print to echo area or stdout if
    non-interactive.  If FUN is neither nil nor t, call FUN with CH as
@@ -785,6 +767,22 @@ to make it write to the debugging output.  */)
   CHECK_NUMBER (character);
   printchar_to_stream (XINT (character), stderr);
   return character;
+}
+
+DEFUN ("external-standard-output", Fexternal_standard_output, Sexternal_standard_output, 1, 1, 0,
+       doc: /* Output character CHARACTER to system standard output. */)
+     (Lisp_Object character)
+{
+  CHECK_NUMBER (character);
+  printchar_to_stream (XINT(character), stdout);
+  return character;
+}
+
+DEFUN ("external-standard-error", Fexternal_standard_error, Sexternal_standard_error, 1, 1, 0,
+       doc: /* Output character CHARACTER to system standard error. */)
+     (Lisp_Object character)
+{
+  return Fexternal_debugging_output (character);
 }
 
 /* This function is never called.  Its purpose is to prevent
@@ -2319,15 +2317,16 @@ priorities.  */);
   /* prin1_to_string_buffer initialized in init_buffer_once in buffer.c */
   staticpro (&Vprin1_to_string_buffer);
 
-  defsubr (&Sstdout);
-  defsubr (&Sstderr);
   defsubr (&Sprin1);
   defsubr (&Sprin1_to_string);
   defsubr (&Serror_message_string);
   defsubr (&Sprinc);
   defsubr (&Sprint);
   defsubr (&Sterpri);
+  defsubr (&Sexternal_standard_output);
+  defsubr (&Sexternal_standard_error);
   defsubr (&Swrite_char);
+
   defsubr (&Sredirect_debugging_output);
 
   DEFSYM (Qprint_escape_newlines, "print-escape-newlines");

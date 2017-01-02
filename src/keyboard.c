@@ -10655,24 +10655,29 @@ See also `current-input-mode'.  */)
   struct terminal *t = get_named_terminal (DEV_TTY);
   struct tty_display_info *tty;
 
-  if (!t)
-    return Qnil;
-  tty = t->display_info.tty;
-
   if (NILP (quit) || !INTEGERP (quit) || XINT (quit) < 0 || XINT (quit) > 0400)
     error ("QUIT must be an ASCII character");
 
+  if (t)
+    {
+      tty = t->display_info.tty;
 #ifndef DOS_NT
-  /* this causes startup screen to be restored and messes with the mouse */
-  reset_sys_modes (tty);
+      /* this causes startup screen to be restored and messes with the mouse */
+      reset_sys_modes (tty);
 #endif
 
-  /* Don't let this value be out of range.  */
-  quit_char = XINT (quit) & (tty->meta_key == 0 ? 0177 : 0377);
+      /* Don't let this value be out of range.  */
+      quit_char = XINT (quit) & (tty->meta_key == 0 ? 0177 : 0377);
 
 #ifndef DOS_NT
-  init_sys_modes (tty);
+      init_sys_modes (tty);
 #endif
+    }
+  else
+    {
+      /* No associated TTY, accept 7-bit ASCII characters */
+      quit_char = XINT (quit) & 0177;
+    }
 
   return Qnil;
 }
